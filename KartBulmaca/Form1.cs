@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace KartBulmaca
+{
+    public partial class Form1 : Form
+    {
+        List<string> semboller = new List<string>()
+        {
+            "🍋","🍋","🍓","🍓",
+            "🍇","🍇","🍈","🍈",
+            "🍎","🍎","🍉","🍉",
+            "🥝","🥝","🍐","🍐"
+
+        };
+
+        Button ilkSecilen = null;
+        Button ikinciSecilen = null;
+
+        Timer eslesmeKontrolZamani= new Timer();
+        public Form1()
+        {
+            InitializeComponent(); //tasarım ekranında oluşturduğumuz kontrolleri forma basan kurucu metot.
+            sembolleriKaristir(); 
+            butonlaraSembolAta();
+            eslesmeKontrolZamani.Interval = 750; //timerın ne kadar çalışacağını belirtir.
+            eslesmeKontrolZamani.Tick += eslesmeKontrolZamani_Tick;
+            
+        }
+        private void sembolleriKaristir()
+        {
+            Random rnd = new Random();
+            semboller=semboller.OrderBy(x=>rnd.Next()).ToList(); // Her yeni turda kartların yerini değiştirir farklı bir oynanış sağlar.
+        }
+        private void butonlaraSembolAta()
+        {
+            int i = 0;
+
+            foreach(Control kontrol in tableLayoutPanel1.Controls)
+            {
+
+                if (kontrol is Button)
+                {
+                    Button btn = (Button)kontrol;
+                    btn.Font = new Font(FontFamily.GenericSansSerif,24,FontStyle.Bold);
+                    btn.Text = "?";
+                    btn.Tag = semboller[i];
+                    btn.Click += KartTiklandi;
+                    i++;
+                }
+            }
+        }
+
+        private void KartTiklandi(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
