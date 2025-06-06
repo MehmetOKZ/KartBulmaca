@@ -31,7 +31,7 @@ namespace KartBulmaca
             sembolleriKaristir(); 
             butonlaraSembolAta();
             eslesmeKontrolZamani.Interval = 750; //timerın ne kadar çalışacağını belirtir.
-            eslesmeKontrolZamani.Tick += eslesmeKontrolZamani_Tick;
+            eslesmeKontrolZamani.Tick += EslesmeKontrolZamani_Tick;
             
         }
         private void sembolleriKaristir()
@@ -60,7 +60,53 @@ namespace KartBulmaca
 
         private void KartTiklandi(object sender, EventArgs e)
         {
+            Button tiklanan = sender as Button;
 
+            if (tiklanan==null || tiklanan.Text!="?")
+            {
+                return;
+            }
+            tiklanan.Text= tiklanan.Tag.ToString(); //ilk ve ikinci seçilen kart burada tutulur sonucunda simge text olarak gösterilir.
+
+            if (ilkSecilen == null)
+            {
+                ilkSecilen = tiklanan;
+            }
+            else
+            {
+                ikinciSecilen = tiklanan;
+                eslesmeKontrolZamani.Start();
+            }
+        }
+        private void EslesmeKontrolZamani_Tick(object sender,EventArgs e)
+        {
+            eslesmeKontrolZamani.Stop();
+
+            if(ilkSecilen.Tag.ToString()==ikinciSecilen.Tag.ToString())
+            {
+                ilkSecilen.Enabled= false;
+                ikinciSecilen.Enabled= false;
+            }
+            else
+            {
+                ilkSecilen.Text = "?";
+                ikinciSecilen.Text = "?";
+            }
+            ilkSecilen=null;
+            ikinciSecilen=null;
+
+            oyunBitirmeKontrolu();
+        }
+        private void oyunBitirmeKontrolu()
+        {
+            foreach(Control kontrol in tableLayoutPanel1.Controls)
+            {
+                if(kontrol is Button && kontrol.Enabled)
+                {
+                    return;
+                }
+            }
+            MessageBox.Show("Tebrikler tüm eşleşmeler doğru! :) ");
         }
     }
 }
